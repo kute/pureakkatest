@@ -30,6 +30,28 @@
 			<scope>test</scope>
 		</dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.truth.extensions</groupId>
+            <artifactId>truth-java8-extension</artifactId>
+            <version>0.44</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <version>0.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>joor-java-8</artifactId>
+            <version>0.9.7</version>
+        </dependency>
+
+
 		<!--akka-->
 		<dependency>
 			<groupId>com.typesafe.akka</groupId>
