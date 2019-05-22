@@ -13,4 +13,12 @@ public final class TimeUtil {
         Try.run(() -> TimeUnit.SECONDS.sleep(seconds));
     }
 
+    public static void sleepForever() {
+        Try.run(() -> {
+            while (true) {
+
+            }
+        });
+    }
+
 }
