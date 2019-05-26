@@ -53,30 +53,30 @@
 
 
 		<!--akka-->
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor_2.13.0-RC2</artifactId>
+            <version>2.5.23</version>
+        </dependency>
 		<dependency>
 			<groupId>com.typesafe.akka</groupId>
-			<artifactId>akka-actor_2.12</artifactId>
-			<version>2.6.0-M1</version>
+			<artifactId>akka-testkit_2.13.0-RC2</artifactId>
+			<version>2.5.23</version>
 		</dependency>
 		<dependency>
 			<groupId>com.typesafe.akka</groupId>
-			<artifactId>akka-testkit_2.12</artifactId>
-			<version>2.6.0-M1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.typesafe.akka</groupId>
-			<artifactId>akka-http_2.12</artifactId>
+			<artifactId>akka-http_2.13.0-RC2</artifactId>
 			<version>10.1.8</version>
 		</dependency>
 		<dependency>
 			<groupId>com.typesafe.akka</groupId>
-			<artifactId>akka-cluster_2.12</artifactId>
-			<version>2.6.0-M1</version>
+			<artifactId>akka-cluster_2.13.0-RC2</artifactId>
+			<version>2.5.23</version>
 		</dependency>
 		<dependency>
 			<groupId>com.typesafe.akka</groupId>
-			<artifactId>akka-stream_2.12</artifactId>
-			<version>2.6.0-M1</version>
+			<artifactId>akka-stream_2.13.0-RC2</artifactId>
+			<version>2.5.23</version>
 		</dependency>
 	</dependencies>
 
