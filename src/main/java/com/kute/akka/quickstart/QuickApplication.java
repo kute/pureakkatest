@@ -3,7 +3,10 @@ package com.kute.akka.quickstart;
 import akka.actor.*;
 import akka.actor.ActorSystem;
 import akka.testkit.javadsl.TestKit;
+import com.google.common.truth.Truth;
 import com.kute.akka.quickstart.caseclass.Message;
+import com.kute.akka.quickstart.caseclass.StopMessage;
+import com.kute.akka.util.TimeUtil;
 import io.vavr.control.Try;
 import org.junit.After;
 import org.junit.Before;
@@ -11,7 +14,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.concurrent.duration.FiniteDuration;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
@@ -73,7 +78,21 @@ public final class QuickApplication {
     @Test
     public void testInbox() {
 
+        ActorRef targetActor = system.actorOf(ConsumerActor.props(), "targetActor");
 
+        final Inbox inbox = Inbox.create(system);
+
+        String msg = "map";
+
+        // 发送消息，send方法是对tell方法的封装
+        inbox.send(targetActor, msg);
+
+        Try.run(() -> {
+            // 接收消息
+            Object message = inbox.receive(Duration.ofSeconds(10));
+            Truth.assertThat(message).isNotNull();
+            Truth.assertThat(message).isEqualTo(msg);
+        }).onFailure(ex -> LOGGER.error("", ex));
     }
 
     /**
@@ -82,6 +101,29 @@ public final class QuickApplication {
     @Test
     public void testInbox2() {
 
+        ActorRef targetActor = system.actorOf(ConsumerActor.props(), "targetActor");
+
+        final Inbox inbox = Inbox.create(system);
+
+        inbox.watch(targetActor);
+
+        String msg = "map";
+
+        targetActor.tell(msg, ActorRef.noSender());
+
+        Try.run(() -> {
+            Terminated terminated = (Terminated) inbox.receive(FiniteDuration.create(1L, TimeUnit.SECONDS));
+            System.out.println(terminated.toString());
+            System.out.println(terminated.getActor().path());
+        }).onFailure(ex -> LOGGER.error("", ex));
+
+    }
+
+    @Test
+    public void testWatch() {
+        ActorRef consumerActor = system.actorOf(ConsumerActor.props(), "consumerActor");
+        producerActor = system.actorOf(ProducerActor.props(consumerActor), "producerActor");
+        consumerActor.tell("stopChild", producerActor);
     }
 
 

@@ -3,7 +3,10 @@ package com.kute.akka.quickstart;
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import akka.actor.Terminated;
+import com.kute.akka.quickstart.caseclass.ActorMessage;
 import com.kute.akka.quickstart.caseclass.Message;
+import com.kute.akka.quickstart.caseclass.StopMessage;
 import com.kute.akka.util.TimeUtil;
 import lombok.NoArgsConstructor;
 import scala.Option;
@@ -60,6 +63,7 @@ public class ProducerActor extends AbstractLoggingActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
+                // match 顺序也是有关系的
                 .match(Message.class, event -> {
                     log().info("ProducerActor Receive message={}, self={}, sender={}", event.getMessage(), getSelf(), getSender());
                     consumerActor.tell(event, getSelf());
@@ -68,6 +72,15 @@ public class ProducerActor extends AbstractLoggingActor {
                     // 异常后 默认的策略：停止并重启actor
                     log().error("throw exception", e);
                     throw e;
+                })
+                // 收到 要 监视子节点的消息
+                .match(ActorMessage.class, actorMessage -> "toWatchChild".equals(actorMessage.getAction()), actorMessage -> {
+                    log().info("Recevie watch message for child={}", actorMessage.getActorRef().path());
+                    getContext().watch(actorMessage.getActorRef());
+                })
+                // 监听 所有监视的actor的终止消息
+                .match(Terminated.class, terminated -> {
+                    log().info("Receive actor={} terminated", terminated.actor().path());
                 })
                 .matchAny(o -> {
                     log().info("未知消息：{}", o);
