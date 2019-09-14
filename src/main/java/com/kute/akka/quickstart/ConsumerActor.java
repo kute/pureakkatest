@@ -6,7 +6,6 @@ import akka.actor.Props;
 import akka.actor.Terminated;
 import com.kute.akka.quickstart.caseclass.ActorMessage;
 import com.kute.akka.quickstart.caseclass.Message;
-import com.kute.akka.quickstart.caseclass.StopMessage;
 import com.kute.akka.util.TimeUtil;
 
 /**
@@ -51,9 +50,10 @@ public class ConsumerActor extends AbstractLoggingActor {
                     // 告诉 procuder监视consumer的child
                     getSender().tell(new ActorMessage("toWatchChild", child), getSelf());
                     // 终止子节点
+//                    getContext().unwatch(child);
                     getContext().stop(child);
                 })
-                // 监听 特定子节点的 终止消息
+                // 监听 特定子节点的 终止消息，注意：Terminated msg 对于watch 操作是独立的，即使 actor在 watch的同时已经停止 也会 收到 Terminated 消息，相应的 即使 Terminated 消息已经在信箱了，那么unwatch后 也不会处理这个消息
                 .match(Terminated.class, terminated -> terminated.getActor().equals(child), terminated -> {
                     log().info("Child={} has terminated", terminated.actor().path());
                 })

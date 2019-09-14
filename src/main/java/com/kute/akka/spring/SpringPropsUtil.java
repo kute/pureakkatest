@@ -21,6 +21,7 @@ public final class SpringPropsUtil implements Extension, ApplicationContextAware
     }
 
     public Props props(String beanName, Object... args) {
+        // SpringActorProduce 构造函数
         return Props.create(SpringActorProduce.class, applicationContext, beanName, args);
     }
 }
